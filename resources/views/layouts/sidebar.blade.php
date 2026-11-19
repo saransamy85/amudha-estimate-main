@@ -160,6 +160,14 @@
         {{-- Section 3: Administration --}}
         <div class="sidebar-section-title">Administration</div>
 
+        {{-- Staff Attendance --}}
+        <a href="{{ route('accounts.attendance') }}" class="menu-item {{ request()->routeIs('accounts.attendance*') ? 'active' : '' }}" title="Staff Attendance">
+            <div class="menu-icon-box text-success">
+                <i class="bi bi-calendar2-check-fill"></i>
+            </div>
+            <span class="menu-text">Staff Attendance</span>
+        </a>
+
         {{-- Users --}}
         <a href="{{ route('usermanagement') }}" class="menu-item {{ request()->routeIs('usermanagement') ? 'active' : '' }}" title="User Management">
             <div class="menu-icon-box">

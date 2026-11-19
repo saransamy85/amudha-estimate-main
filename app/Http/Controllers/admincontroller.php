@@ -10,6 +10,7 @@ use App\Models\LeadActivity;
 use App\Models\leads;
 use App\Models\PurchaseOrder;
 use App\Models\User;
+use App\Models\Attendance;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -253,7 +254,8 @@ class admincontroller extends Controller
             ]);
 
             Auth::user()->update([
-                'Status' => 'Online'
+                'Status' => 'Online',
+                'last_login' => Carbon::now(),
             ]);
 
             switch (Auth::user()->Role) {
@@ -287,7 +289,10 @@ class admincontroller extends Controller
 
     public function logout()
     {
-        auth()->user()->update(['Status' => 'Offline']);
+        if (Auth::check()) {
+            auth()->user()->update(['Status' => 'Offline']);
+        }
+
         Auth::logout();
         // Clear all session data
         session()->invalidate();

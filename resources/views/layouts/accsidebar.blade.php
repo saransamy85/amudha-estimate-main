@@ -33,6 +33,15 @@
             <span class="menu-text">Customer Search</span>
         </a>
 
+        <div class="sidebar-section-title">HR & Attendance</div>
+
+        <a href="{{ route('accounts.attendance') }}" class="menu-item {{ request()->routeIs('accounts.attendance') ? 'active' : '' }}" title="Staff Attendance">
+            <div class="menu-icon-box text-success">
+                <i class="bi bi-calendar2-check-fill"></i>
+            </div>
+            <span class="menu-text">Staff Attendance</span>
+        </a>
+
         <div class="sidebar-section-title">Billing & Transactions</div>
 
         <a href="#" class="menu-item" title="Purchase Orders">

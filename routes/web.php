@@ -147,3 +147,10 @@ Route::get('/purchase/pdf/{id}', [PurchaseOrderController::class, 'pdf'])->name(
 Route::get('/accounts', [AccountsController::class, 'home'])->name('accountshome');
 Route::get('/accounts/customer-search', [AccountsController::class, 'customerSearch'])->name('customersearch');
 Route::get('/accounts/report/pdf/{lead_id}', [AccountsController::class, 'customerReportPdf'])->name('customer.report.pdf');
+Route::get('/accounts/attendance', [AccountsController::class, 'attendance'])->name('accounts.attendance');
+Route::post('/accounts/attendance/update', [AccountsController::class, 'updateAttendanceStatus'])->name('accounts.attendance.update');
+Route::get('/accounts/attendance/export-csv', [AccountsController::class, 'exportAttendanceCsv'])->name('accounts.attendance.csv');
+
+// Individual Staff Self-Attendance Punch In & Out (Available to all logged-in staff)
+Route::post('/my-attendance/checkin', [AccountsController::class, 'myCheckIn'])->name('attendance.checkin');
+Route::post('/my-attendance/checkout', [AccountsController::class, 'myCheckOut'])->name('attendance.checkout');

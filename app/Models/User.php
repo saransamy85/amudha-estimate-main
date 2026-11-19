@@ -67,4 +67,14 @@ class User extends Authenticatable
     {
         return $this->hasMany(PurchaseOrder::class, 'created_by');
     }
+
+    public function attendances()
+    {
+        return $this->hasMany(Attendance::class, 'user_id');
+    }
+
+    public function todayAttendance()
+    {
+        return $this->hasOne(Attendance::class, 'user_id')->whereDate('attendance_date', \Carbon\Carbon::today());
+    }
 }

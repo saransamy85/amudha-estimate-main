@@ -357,10 +357,6 @@ class PurchaseOrderController extends Controller
                             ?? 0
                         );
 
-
-                   
-
-
                     PurchaseOrderContractorItem::create([
 
                         'purchase_order_id' =>

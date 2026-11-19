@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CustomerController;
 use App\Http\Controllers\Api\EstimateController;
 use App\Http\Controllers\Api\LeadController;
+use App\Http\Controllers\Api\AttendanceApiController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -57,4 +58,17 @@ Route::get('/estimates/{id}/pdf', [EstimateController::class, 'pdf']);
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
+});
+
+/*
+|--------------------------------------------------------------------------
+| Flutter Mobile App Staff Attendance API (with GPS Coordinates)
+|--------------------------------------------------------------------------
+*/
+Route::middleware('auth:sanctum')->prefix('attendance')->group(function () {
+    Route::get('/today', [AttendanceApiController::class, 'today']);
+    Route::post('/check-in', [AttendanceApiController::class, 'checkIn']);
+    Route::post('/check-out', [AttendanceApiController::class, 'checkOut']);
+    Route::get('/history', [AttendanceApiController::class, 'history']);
+    Route::get('/all', [AttendanceApiController::class, 'allStaff']);
 });
