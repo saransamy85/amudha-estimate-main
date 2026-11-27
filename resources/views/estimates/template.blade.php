@@ -60,7 +60,6 @@
 </head>
 
 <body>
-    <a href="{{route('salesdashboard')}}"><button class="btn btn-primary">Home</button></a>
     <!-- HEADER -->
     <table class="no-border">
         <tr>

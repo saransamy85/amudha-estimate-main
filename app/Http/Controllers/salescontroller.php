@@ -134,7 +134,7 @@ class salescontroller extends Controller
         $cuscount = customers::count();
         $lc = leads::count();
 
-        $lds = leads::with('feedbacks');
+        $lds = leads::with(['feedbacks', 'estimates']);
 
         if ($request->filled('search')) {
             $search = trim($request->search);

@@ -1,16 +1,36 @@
-@extends('layouts.app')
+@php
+if(Auth::check() && Auth::user()->Role == 'Sales'){
+    $layout = 'layouts.salesbase';
+    $backRoute = route('salesdashboard');
+} elseif(Auth::check() && Auth::user()->Role == 'Admin'){
+    $layout = 'layouts.adminbase';
+    $backRoute = route('dashboard1');
+} else {
+    $layout = 'layouts.app';
+    $backRoute = route('salesdashboard');
+}
+@endphp
+
+@extends($layout)
+
+@section('title', 'Edit Estimate ' . $estimate->estimate_no)
 
 @section('content')
-<div class="container pb-5">
+<div class="container-fluid py-3">
     <div class="d-flex justify-content-between align-items-center mb-3">
         <div class="d-flex align-items-center gap-2">
-            <a href="{{ route('salesdashboard') }}" class="btn btn-outline-primary btn-sm">
-                <i class="bi bi-house"></i> Home
+            <a href="{{ $backRoute }}" class="btn btn-outline-primary btn-sm rounded-pill px-3 shadow-2xs">
+                <i class="bi bi-arrow-left"></i> Dashboard
             </a>
-            <a href="{{ route('estimates.show', $estimate->id) }}" class="btn btn-outline-secondary btn-sm">
-                <i class="bi bi-arrow-left"></i> View Estimate
+            <a href="{{ route('estimates.show', $estimate->id) }}" class="btn btn-outline-secondary btn-sm rounded-pill px-3 shadow-2xs">
+                <i class="bi bi-eye"></i> View Proposal
             </a>
-            <h4 class="mb-0 ms-2">Edit Estimate: <span class="text-primary">{{ $estimate->estimate_no }}</span></h4>
+            <h4 class="mb-0 ms-2 fw-bold text-dark">Edit Estimate: <span class="text-primary">{{ $estimate->estimate_no }}</span></h4>
+        </div>
+        <div>
+            <a href="{{ route('estimates.pdf', $estimate->id) }}" class="btn btn-danger btn-sm rounded-pill px-3 shadow-sm" target="_blank">
+                <i class="bi bi-file-earmark-pdf me-1"></i> Current PDF
+            </a>
         </div>
     </div>
 

@@ -165,10 +165,6 @@ class estimatecontroller extends Controller
 
     public function edit($id)
     {
-        if (Auth::check() && Auth::user()->Role === 'Sales') {
-            return redirect()->route('salesdashboard')->with('error', 'Sales users do not have permission to edit estimates.');
-        }
-
         if (session()->has('username')) {
             $estimate = estimate::with(['items', 'notes'])->findOrFail($id);
             return view('estimates.edit', compact('estimate'));
@@ -178,10 +174,6 @@ class estimatecontroller extends Controller
 
     public function update(Request $request, $id)
     {
-        if (Auth::check() && Auth::user()->Role === 'Sales') {
-            return redirect()->route('salesdashboard')->with('error', 'Sales users do not have permission to edit estimates.');
-        }
-
         try {
             DB::transaction(function () use ($request, $id) {
                 $estimate = Estimate::findOrFail($id);

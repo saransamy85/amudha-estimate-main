@@ -382,9 +382,18 @@
                         <td class="text-center">
                             <div class="d-inline-flex align-items-center gap-1">
                                 @if(!$isCancelled)
-                                <a href="{{ route('estimates.create1', ['lead_id' => $leds->id]) }}" class="btn btn-sm btn-outline-primary rounded-pill px-2.5 py-1 d-inline-flex align-items-center gap-1 shadow-sm" style="font-size: 12px;" title="Create Estimate">
-                                    <i class="bi bi-file-earmark-plus"></i> Estimate
-                                </a>
+                                    @php
+                                        $existingEst = $leds->estimates ? $leds->estimates->last() : null;
+                                    @endphp
+                                    @if($existingEst)
+                                        <a href="{{ route('estimates.edit', $existingEst->id) }}" class="btn btn-sm btn-outline-warning rounded-pill px-2.5 py-1 d-inline-flex align-items-center gap-1 shadow-sm" style="font-size: 12px;" title="Edit Estimate ({{ $existingEst->estimate_no }})">
+                                            <i class="bi bi-pencil-square"></i> Edit Est
+                                        </a>
+                                    @else
+                                        <a href="{{ route('estimates.create1', ['lead_id' => $leds->id]) }}" class="btn btn-sm btn-outline-primary rounded-pill px-2.5 py-1 d-inline-flex align-items-center gap-1 shadow-sm" style="font-size: 12px;" title="Create Estimate">
+                                            <i class="bi bi-file-earmark-plus"></i> Estimate
+                                        </a>
+                                    @endif
                                 @else
                                 <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-2 py-1" style="font-size: 11px;">
                                     Cancelled

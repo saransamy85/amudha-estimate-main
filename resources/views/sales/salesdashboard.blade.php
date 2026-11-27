@@ -298,10 +298,17 @@
                         </td>
                         <td class="text-center">
                             <div class="d-inline-flex align-items-center gap-1">
+                                {{-- View Proposal --}}
                                 <a href="{{ route('estimates.show', $estimate->id) }}" class="btn btn-sm btn-light border text-secondary action-icon-btn" title="View Proposal">
                                     <i class="bi bi-eye"></i>
                                 </a>
 
+                                {{-- Edit Proposal --}}
+                                <a href="{{ route('estimates.edit', $estimate->id) }}" class="btn btn-sm btn-light border text-warning action-icon-btn" title="Edit Proposal">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+
+                                {{-- Download PDF --}}
                                 <a href="{{ route('estimates.pdf', $estimate->id) }}" class="btn btn-sm btn-light border text-danger action-icon-btn" target="_blank" title="Download PDF">
                                     <i class="bi bi-file-earmark-pdf"></i>
                                 </a>

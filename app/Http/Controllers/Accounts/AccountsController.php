@@ -364,12 +364,17 @@ class AccountsController extends Controller
 
     /**
      * Individual User Self Attendance Check-In / Punch In
-     * (Available to all logged-in staff)
+     * (Available to all logged-in staff - requires GPS location)
      */
     public function myCheckIn(Request $request)
     {
         if (!Auth::check()) {
             return redirect()->route('login');
+        }
+
+        // Location permission check
+        if (!$request->filled('latitude') || !$request->filled('longitude')) {
+            return back()->with('error', 'Location permission is required to mark your attendance. Please allow GPS location access in your browser/device settings and try again.');
         }
 
         $userId = Auth::id();
@@ -385,6 +390,11 @@ class AccountsController extends Controller
                 [
                     'login_time' => $currentTime,
                     'status' => 'Present',
+                    'checkin_latitude' => $request->latitude,
+                    'checkin_longitude' => $request->longitude,
+                    'checkin_address' => $request->address,
+                    'device_info' => $request->get('device_info', substr((string) $request->userAgent(), 0, 255)),
+                    'source' => $request->get('source', 'web_gps'),
                     'ip_address' => $request->ip(),
                     'user_agent' => substr((string) $request->userAgent(), 0, 255),
                     'login_count' => 1,
@@ -397,14 +407,19 @@ class AccountsController extends Controller
                     $attendance->login_time = $currentTime;
                     $attendance->status = 'Present';
                 }
+                if (empty($attendance->checkin_latitude)) {
+                    $attendance->checkin_latitude = $request->latitude;
+                    $attendance->checkin_longitude = $request->longitude;
+                    $attendance->checkin_address = $request->address;
+                }
                 $attendance->increment('login_count');
                 $attendance->update([
                     'last_activity_at' => Carbon::now('Asia/Kolkata'),
                     'ip_address' => $request->ip(),
                 ]);
-                $msg = 'Your attendance is already marked for today at ' . Carbon::parse($attendance->login_time)->setTimezone('Asia/Kolkata')->format('h:i A') . '.';
+                $msg = 'Your attendance is already marked for today at ' . Carbon::parse($attendance->login_time)->setTimezone('Asia/Kolkata')->format('h:i A') . ' (GPS Verified).';
             } else {
-                $msg = 'Attendance marked successfully! Check-in recorded at ' . Carbon::parse($currentTime)->setTimezone('Asia/Kolkata')->format('h:i A') . '.';
+                $msg = 'Attendance marked successfully! Check-in recorded at ' . Carbon::parse($currentTime)->setTimezone('Asia/Kolkata')->format('h:i A') . ' with GPS location verified.';
             }
 
             // Keep user Status as Online
@@ -421,12 +436,17 @@ class AccountsController extends Controller
 
     /**
      * Individual User Self Attendance Check-Out / Punch Out
-     * (Available to all logged-in staff)
+     * (Available to all logged-in staff - requires GPS location)
      */
     public function myCheckOut(Request $request)
     {
         if (!Auth::check()) {
             return redirect()->route('login');
+        }
+
+        // Location permission check
+        if (!$request->filled('latitude') || !$request->filled('longitude')) {
+            return back()->with('error', 'Location permission is required to record check-out. Please allow GPS location access in your browser/device settings and try again.');
         }
 
         $userId = Auth::id();
@@ -441,9 +461,12 @@ class AccountsController extends Controller
             if ($attendance) {
                 $attendance->update([
                     'logout_time' => $currentTime,
+                    'checkout_latitude' => $request->latitude,
+                    'checkout_longitude' => $request->longitude,
+                    'checkout_address' => $request->address,
                     'last_activity_at' => Carbon::now('Asia/Kolkata'),
                 ]);
-                $msg = 'Punch-out recorded successfully at ' . Carbon::parse($currentTime)->setTimezone('Asia/Kolkata')->format('h:i A') . '. Have a great day!';
+                $msg = 'Check-out recorded successfully at ' . Carbon::parse($currentTime)->setTimezone('Asia/Kolkata')->format('h:i A') . ' (GPS Verified). Have a great day!';
             } else {
                 Attendance::create([
                     'user_id' => $userId,
@@ -451,12 +474,19 @@ class AccountsController extends Controller
                     'login_time' => $currentTime,
                     'logout_time' => $currentTime,
                     'status' => 'Present',
+                    'checkin_latitude' => $request->latitude,
+                    'checkin_longitude' => $request->longitude,
+                    'checkin_address' => $request->address,
+                    'checkout_latitude' => $request->latitude,
+                    'checkout_longitude' => $request->longitude,
+                    'checkout_address' => $request->address,
+                    'source' => $request->get('source', 'web_gps'),
                     'ip_address' => $request->ip(),
                     'user_agent' => substr((string) $request->userAgent(), 0, 255),
                     'login_count' => 1,
                     'last_activity_at' => Carbon::now('Asia/Kolkata'),
                 ]);
-                $msg = 'Attendance & Check-out recorded at ' . Carbon::parse($currentTime)->setTimezone('Asia/Kolkata')->format('h:i A') . '.';
+                $msg = 'Attendance & Check-out recorded at ' . Carbon::parse($currentTime)->setTimezone('Asia/Kolkata')->format('h:i A') . ' (GPS Verified).';
             }
 
             return back()->with('success', $msg);
